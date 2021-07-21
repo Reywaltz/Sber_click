@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  # sber-api:
+  #   build: ./task-api
+  #   ports:
+  #     - 5000:5000
+  #   volumes: 
+  #     - .:/task-api
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: sber
+      POSTGRES_PASSWORD: sber
+      POSTGRES_DB: sber
+    volumes:
+       - /private/var/lib/postgresql:/var/lib/postgresql
+    ports:
+      - "5433:5432"
+
