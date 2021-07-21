@@ -15,7 +15,3 @@ class Logger(ABC):
     @abstractmethod
     def error(self, msg: Any):
         pass
-
-    @abstractmethod
-    def fatal(self, msg: Any):
-        pass

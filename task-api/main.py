@@ -1,4 +1,5 @@
 from flask import Flask
+from pkg.logger.log import init_logger
 
 app = Flask("task-api")
 
