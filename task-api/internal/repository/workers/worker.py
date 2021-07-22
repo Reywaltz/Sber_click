@@ -5,7 +5,7 @@ from pkg.postgres.db import DB
 
 worker_fields = "name"
 insert_worker = f"INSERT INTO worker ({worker_fields}) VALUES (%s)"
-update_worker = "UPDATE worker set name=%s, id=%s"
+update_worker = "UPDATE worker set name=%s WHERE id=%s"
 delete_worker = "DELETE FROM worker where id = %s"
 
 
@@ -17,7 +17,7 @@ class WorkerRepo(Storage):
     def insert(self, worker: Worker):
         cursor = self.db.session.cursor()
         try:
-            cursor.execute(insert_worker, (worker.name))
+            cursor.execute(insert_worker, (worker.name,))
             self.db.session.commit()
 
         except Exception as e:

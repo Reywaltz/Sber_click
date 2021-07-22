@@ -3,16 +3,19 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class Task(BaseModel):
+class CreateTask(BaseModel):
     name: str
     type: str
     status: str
     date: datetime
     customer_id: int
+
+
+class TaskWithWorker(CreateTask):
     worker_id: int
 
 
-class TaskFull(Task):
+class TaskFull(TaskWithWorker):
     id: int
 
 
@@ -20,7 +23,7 @@ class Storage(ABC):
     """Интерфейс репозитория"""
 
     @abstractclassmethod
-    def insert(self, task: Task):
+    def insert(self, task: CreateTask):
         ...
 
     @abstractclassmethod
