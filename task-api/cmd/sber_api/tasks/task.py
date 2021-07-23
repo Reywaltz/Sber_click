@@ -1,7 +1,11 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 from flask import Flask, Response, request, jsonify
+from werkzeug.datastructures import MultiDict
+from internal.exceptions.exception import URLvalidException
 from internal.models.task import CreateTask, TaskFull
+from cmd.additions.additions import Queries
 from internal.repository.tasks.task import TaskRepo
 from pkg.logger.log import Log
 from psycopg2 import IntegrityError
@@ -106,6 +110,51 @@ class TaskHandler:
         return {"success": "deleted"}, 204
 
     def get_tasks(self):
-        res = self.task_storage.getall()
+        args = request.args
+
+        try:
+            q = get_url_params(args)
+        except URLvalidException as e:
+            self.logger.error(f"bad query param: {e}")
+            return {"error": "bad query param"}, 400
+
+        print(q.created, q.type, q.status)
+
+        res = self.task_storage.getall(q)
 
         return jsonify(res), 200
+
+
+def get_url_params(params: MultiDict) -> Queries:
+    date_param = params.get("date", None)
+    date_lst = []
+
+    if date_param is not None and date_param != "":
+        tmp = date_param.split(",")
+        for date in tmp:
+            try:
+                date_lst.append(datetime.strptime(date, '%Y-%m-%d'))
+            except ValueError:
+                raise URLvalidException("Bad date param")
+    elif date_param is None:
+        date_lst = [datetime.min, datetime.now()]
+
+    if len(date_lst) > 1:
+        if date_lst[-1] < date_lst[0]:
+            raise URLvalidException("Bad date param")
+
+    type_param = params.get("type", "%%")
+
+    if type_param == "":
+        raise URLvalidException("Empty string type param")
+
+    status_param = params.get("status", None)
+    status_lst = []
+
+    if status_param is not None:
+        if status_param != "":
+            status_lst = status_param.split(",")
+        else:
+            raise URLvalidException("Bad status param")
+
+    return Queries(created=date_lst, type=type_param, status=status_lst)

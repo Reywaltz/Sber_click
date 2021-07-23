@@ -1,11 +1,17 @@
 from dataclasses import dataclass
+
 from internal.models.task import CreateTask, Storage, TaskFull
 from pkg.postgres.db import DB
+from cmd.additions.additions import Queries
 from psycopg2.extras import DictCursor
 
-task_fields = "name, type, status, date, customer_id"
-get_tasks = "SELECT * FROM task order by id"
-insert_task = f"INSERT INTO task ({task_fields}) VALUES (%s, %s, %s, %s, %s)"
+
+task_fields = "name, type, status, created, customer_id, worker_id"
+full_task_fields = "id, " + task_fields
+get_base = f"SELECT {full_task_fields} FROM task WHERE"
+insert_task = "INSERT INTO task\
+              (name, type, status, created, customer_id)\
+              VALUES (%s, %s, %s, %s, %s)"
 update_task = "UPDATE task set name=%s, type=%s, status=%s, date=%s,\
                customer_id=%s, worker_id=%s where id=%s"
 delete_task = "DELETE FROM task where id = %s"
@@ -22,7 +28,7 @@ class TaskRepo(Storage):
             cursor.execute(insert_task, (task.name,
                                          task.type,
                                          task.status,
-                                         task.date,
+                                         task.created,
                                          task.customer_id,))
             self.db.session.commit()
 
@@ -45,20 +51,29 @@ class TaskRepo(Storage):
             cursor.execute(update_task, (task.name,
                                          task.type,
                                          task.status,
-                                         task.date,
+                                         task.created,
                                          task.customer_id,
                                          task.worker_id,
-                                         task.id))
+                                         task.id,))
             self.db.session.commit()
         except Exception as e:
             self.db.session.rollback()
             raise e
 
-    def getall(self):
+    def getall(self, queries: Queries) -> list[TaskFull]:
         cursor = self.db.session.cursor(cursor_factory=DictCursor)
-        cursor.execute(get_tasks)
-        res = cursor.fetchall()
-        res = scan_tasks(res)
+        query = buildSQL(queries)
+        if queries.status != []:
+            cursor.execute(query, (queries.created[0],
+                                   queries.created[-1],
+                                   queries.type,
+                                   tuple(queries.status),))
+        else:
+            cursor.execute(query, (queries.created[0],
+                                   queries.created[-1],
+                                   queries.type,))
+
+        res = scan_tasks(cursor.fetchall())
 
         return res
 
@@ -73,6 +88,16 @@ def scan_tasks(res: list[tuple]) -> list[TaskFull]:
 
 def scan_task(res: dict) -> TaskFull:
     return TaskFull(**res).dict()
+
+
+def buildSQL(queries: Queries):
+    query = "SELECT * FROM task WHERE DATE(created) between %s and %s and\
+            type ilike %s"
+
+    if queries.status != []:
+        query = f"{query} and status in %s"
+
+    return query
 
 
 def new_TaskRepo(db: DB) -> TaskRepo:

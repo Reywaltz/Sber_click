@@ -1,18 +1,19 @@
 from abc import ABC, abstractclassmethod
 from datetime import datetime
 from pydantic import BaseModel
+from typing import Optional
 
 
 class CreateTask(BaseModel):
     name: str
     type: str
     status: str
-    date: datetime
+    created: datetime
     customer_id: int
 
 
 class TaskWithWorker(CreateTask):
-    worker_id: int
+    worker_id: Optional[int]
 
 
 class TaskFull(TaskWithWorker):
