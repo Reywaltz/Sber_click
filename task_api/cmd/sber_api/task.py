@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from flask import Flask, Response, jsonify, request
 from internal.exceptions.exception import URLvalidException
 from internal.models.task import CreateTask, TaskFull
-from internal.repository.tasks.task import TaskRepo
-from internal.repository.users.user import UserRepo
-from pkg.logger.log import Log
+from internal.repository.task import TaskRepo
+from internal.repository.user import UserRepo
+from pkg.log import Log
 from psycopg2 import IntegrityError
 from pydantic.error_wrappers import ValidationError
 

@@ -1,8 +1,8 @@
 import pytest
 import psycopg2
 import random
-from task_api.pkg.postgres.db import parse_from_connstr
-from task_api.pkg.postgres.db import newDB, Config
+from task_api.pkg.db import parse_from_connstr
+from task_api.pkg.db import newDB, Config
 
 
 class Test_ParseConnStr:
@@ -22,7 +22,7 @@ class Test_ParseConnStr:
                   "dbname": "sber",
                   "host": "db",
                   "port": "5432",
-                  }
+        }
 
         conn = "postszgres://{0}:{1}@{2}:{3}/{4}".format(params["user"],
                                                          params["password"],

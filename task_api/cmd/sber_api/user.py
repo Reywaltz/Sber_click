@@ -3,8 +3,8 @@ from datetime import datetime
 
 from flask import Flask, request
 from internal.models.user import User
-from internal.repository.users.user import UserRepo
-from pkg.logger.log import Log
+from internal.repository.user import UserRepo
+from pkg.log import Log
 
 
 @dataclass

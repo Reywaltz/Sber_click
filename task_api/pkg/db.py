@@ -44,5 +44,5 @@ def newDB(cfg: Config) -> DB:
         )
     except psycopg2.OperationalError as e:
         raise e
-    db = DB(session=conn)
-    return db
+    # db = DB(session=conn)
+    return conn

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from internal.models.worker import Storage, Worker, WorkerFull
-from pkg.postgres.db import DB
+from psycopg2.extensions import connection
 
 worker_fields = "name"
 insert_worker = f"INSERT INTO worker ({worker_fields}) VALUES (%s)"
@@ -12,40 +12,40 @@ delete_worker = "DELETE FROM worker where id = %s"
 @dataclass
 class WorkerRepo(Storage):
 
-    db: DB
+    db: connection
 
     def insert(self, worker: Worker):
-        cursor = self.db.session.cursor()
+        cursor = self.db.cursor()
         try:
             cursor.execute(insert_worker, (worker.name,))
-            self.db.session.commit()
+            self.db.commit()
 
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def delete(self, worker_id: int):
-        cursor = self.db.session.cursor()
+        cursor = self.db.cursor()
         try:
             cursor.execute(delete_worker, (worker_id,))
-            self.db.session.commit()
+            self.db.commit()
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def update(self, worker: WorkerFull) -> int:
         try:
-            cursor = self.db.session.cursor()
+            cursor = self.db.cursor()
             cursor.execute(update_worker, (worker.name,
                                            worker.id))
-            self.db.session.commit()
+            self.db.commit()
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def getall(self):
         ...
 
 
-def new_WorkerRepo(db: DB) -> WorkerRepo:
+def new_WorkerRepo(db) -> WorkerRepo:
     return WorkerRepo(db=db)

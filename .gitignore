@@ -3,3 +3,4 @@ __pycache__
 postgres-data
 .vscode
 .pytest_cache
+task_api/tests

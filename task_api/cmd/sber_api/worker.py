@@ -3,9 +3,9 @@ from dataclasses import dataclass
 
 from flask import Flask, Response, request
 from internal.models.worker import Worker, WorkerFull
-from internal.repository.users.user import UserRepo
-from internal.repository.workers.worker import WorkerRepo
-from pkg.logger.log import Log
+from internal.repository.user import UserRepo
+from internal.repository.worker import WorkerRepo
+from pkg.log import Log
 from psycopg2 import IntegrityError
 from pydantic.error_wrappers import ValidationError
 

@@ -3,9 +3,9 @@ from dataclasses import dataclass
 
 from flask import Flask, Response, request
 from internal.models.customer import Customer, CustomerFull
-from internal.repository.customers.customer import CustomerRepo
-from internal.repository.users.user import UserRepo
-from pkg.logger.log import Log
+from internal.repository.customer import CustomerRepo
+from internal.repository.user import UserRepo
+from pkg.log import Log
 from psycopg2 import IntegrityError
 from pydantic.error_wrappers import ValidationError
 

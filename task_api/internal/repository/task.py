@@ -2,7 +2,7 @@ from cmd.additions.additions import Queries
 from dataclasses import dataclass
 
 from internal.models.task import CreateTask, Storage, TaskFull
-from pkg.postgres.db import DB
+from psycopg2.extensions import connection
 from psycopg2.extras import DictCursor
 
 task_fields = "name, type, status, created, customer_id, worker_id"
@@ -19,34 +19,34 @@ delete_task = "DELETE FROM task where id = %s"
 @dataclass
 class TaskRepo(Storage):
 
-    db: DB
+    db: connection
 
     def insert(self, task: CreateTask):
-        cursor = self.db.session.cursor()
+        cursor = self.db.cursor()
         try:
             cursor.execute(insert_task, (task.name,
                                          task.type,
                                          task.status,
                                          task.created,
                                          task.customer_id,))
-            self.db.session.commit()
+            self.db.commit()
 
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def delete(self, task_id: int):
-        cursor = self.db.session.cursor()
+        cursor = self.db.cursor()
         try:
             cursor.execute(delete_task, (task_id,))
-            self.db.session.commit()
+            self.db.commit()
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def update(self, task: TaskFull):
         try:
-            cursor = self.db.session.cursor()
+            cursor = self.db.cursor()
             cursor.execute(update_task, (task.name,
                                          task.type,
                                          task.status,
@@ -54,13 +54,13 @@ class TaskRepo(Storage):
                                          task.customer_id,
                                          task.worker_id,
                                          task.id,))
-            self.db.session.commit()
+            self.db.commit()
         except Exception as e:
-            self.db.session.rollback()
+            self.db.rollback()
             raise e
 
     def getall(self, queries: Queries) -> list[TaskFull]:
-        cursor = self.db.session.cursor(cursor_factory=DictCursor)
+        cursor = self.db.cursor(cursor_factory=DictCursor)
         query = buildSQL(queries)
         if queries.status != []:
             cursor.execute(query, (queries.created[0],
@@ -99,5 +99,5 @@ def buildSQL(queries: Queries):
     return query
 
 
-def new_TaskRepo(db: DB) -> TaskRepo:
+def new_TaskRepo(db) -> TaskRepo:
     return TaskRepo(db=db)

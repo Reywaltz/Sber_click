@@ -1,26 +1,26 @@
 import os
 
 import psycopg2
-from cmd.sber_api.customers.customer import CustomerHandler
-from cmd.sber_api.tasks.task import TaskHandler
-from cmd.sber_api.users.user import UserHandler
-from cmd.sber_api.workers.worker import WorkerHandler
+from cmd.sber_api.customer import CustomerHandler
+from cmd.sber_api.task import TaskHandler
+from cmd.sber_api.user import UserHandler
+from cmd.sber_api.worker import WorkerHandler
 
 from flask import Flask
 
-from internal.repository.customers.customer import new_CustomerRepo
-from internal.repository.tasks.task import new_TaskRepo
-from internal.repository.users.user import new_UserRepo
-from internal.repository.workers.worker import new_WorkerRepo
-from pkg.logger.log import init_logger
-from pkg.postgres.db import Config, newDB, parse_from_connstr
+from internal.repository.customer import new_CustomerRepo
+from internal.repository.task import new_TaskRepo
+from internal.repository.user import new_UserRepo
+from internal.repository.worker import new_WorkerRepo
+from pkg.log import init_logger
+from pkg.db import Config, newDB, parse_from_connstr
 
 app = Flask("task-api")
 
 logger = init_logger("sber-log")
 
 try:
-    conn_params = parse_from_connstr("postgres://sber:sber@db:5432/sber")
+    conn_params = parse_from_connstr("postgres://sber:sber@localhost:5433/sber")
 except TypeError as e:
     logger.error(f"Can't parse conn string: {e}")
 
