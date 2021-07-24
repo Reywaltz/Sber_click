@@ -9,7 +9,7 @@ services:
     ports:
       - 5000:5000
     volumes: 
-      - .:/task-api
+      - .:/sber/task-api
     depends_on:
       db:
         condition: service_healthy
