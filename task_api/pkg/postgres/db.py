@@ -15,10 +15,14 @@ class Config:
 
 
 def parse_from_connstr(connURI: str) -> dict:
+    if connURI == "":
+        raise ProgrammingError
     try:
         return parse_dsn(connURI)
     except ProgrammingError:
         raise ProgrammingError
+    except TypeError:
+        raise TypeError
 
 
 @dataclass

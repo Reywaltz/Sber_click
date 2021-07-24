@@ -19,7 +19,11 @@ app = Flask("task-api")
 
 logger = init_logger("sber-log")
 
-conn_params = parse_from_connstr("postgres://sber:sber@db:5432/sber")
+try:
+    conn_params = parse_from_connstr("postgres://sber:sber@db:5432/sber")
+except TypeError as e:
+    logger.error(f"Can't parse conn string: {e}")
+
 cfg = Config(**conn_params)
 try:
     db = newDB(cfg=cfg)
