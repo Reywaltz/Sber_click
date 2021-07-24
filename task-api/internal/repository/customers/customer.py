@@ -49,5 +49,5 @@ class CustomerRepo(Storage):
         ...
 
 
-def new_UserRepo(db: DB) -> CustomerRepo:
+def new_CustomerRepo(db: DB) -> CustomerRepo:
     return CustomerRepo(db=db)

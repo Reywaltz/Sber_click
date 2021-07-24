@@ -13,7 +13,7 @@ class CustomerHandler:
 
     app: Flask
     logger: Log
-    user_storage: CustomerRepo
+    _storage: CustomerRepo
 
     def create_routes(self):
         self.app.add_url_rule(
