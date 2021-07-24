@@ -1,11 +1,20 @@
 version: '3.9'
 services:
-  # sber-api:
-  #   build: ./task-api
-  #   ports:
-  #     - 5000:5000
-  #   volumes: 
-  #     - .:/task-api
+  sber-api:
+    build: ./task_api
+    environment: 
+      PORT: 5000
+      DEBUG: 'true'
+    command: gunicorn main:app --bind 0.0.0.0:5000
+    ports:
+      - 5000:5000
+    volumes: 
+      - .:/task-api
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+  
   db:
     image: postgres:latest
     restart: always
@@ -14,7 +23,14 @@ services:
       POSTGRES_PASSWORD: sber
       POSTGRES_DB: sber
     volumes:
-       - /private/var/lib/postgresql:/var/lib/postgresql
+       - ./postgres-data:/var/lib/postgresql/data
+       - ./schema.sql:/docker-entrypoint-initdb.d/1-init.sql
     ports:
       - "5433:5432"
+    restart: always
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
 
