@@ -11,7 +11,7 @@ get_base = f"SELECT {full_task_fields} FROM task WHERE"
 insert_task = "INSERT INTO task\
               (name, type, status, created, customer_id)\
               VALUES (%s, %s, %s, %s, %s)"
-update_task = "UPDATE task set name=%s, type=%s, status=%s, date=%s,\
+update_task = "UPDATE task set name=%s, type=%s, status=%s, created=%s,\
                customer_id=%s, worker_id=%s where id=%s"
 delete_task = "DELETE FROM task where id = %s"
 

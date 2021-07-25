@@ -29,14 +29,14 @@ class TaskHandler:
 
         self.app.add_url_rule(
             rule="/api/v1/tasks/<id>",
-            endpoint="update_task",
+            endpoint="update_tasks",
             view_func=self.update_task,
             methods=["PUT"]
         )
 
         self.app.add_url_rule(
             rule="/api/v1/tasks/<id>",
-            endpoint="delete_task",
+            endpoint="delete_tasks",
             view_func=self.delete_task,
             methods=["DELETE"]
         )
@@ -112,7 +112,7 @@ class TaskHandler:
 
         return {"success": "deleted"}, 204
 
-    # @auth_required
+    @auth_required
     def get_tasks(self):
         args = request.args
 
