@@ -380,86 +380,123 @@ class Test_Task_Handler:
             assert req.status_code == 400
 
 
-# class Test_Customer_Handler:
-#     def test_ok_add(self):
-#         test_token = str(uuid4())
-#         valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-#         db = MagicMock()
-#         cursor = MagicMock()
-#         header = {"Authorization": f"Bearer {test_token}"}
-#         cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+class Test_Customer_Handler:
+    def test_ok_add(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
 
-#         db.cursor.return_value = cursor
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-#         app = init(db)
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
+        user_db.cursor.return_value = user_cursor
 
-#         inp_json = {
-#             "name": "Посмотреть"
-#         }
+        header = {"Authorization": f"Bearer {test_token}"}
 
-#         test_cl = app.test_client()
-#         with test_cl.post("/api/v1/customers", json=inp_json, headers=header) as req:
-#             assert req.status_code == 201
+        app = init(db, user_db)
 
-#     def test_with_wrong_fields(self):
-#         test_token = str(uuid4())
-#         valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-#         db = MagicMock()
-#         cursor = MagicMock()
-#         header = {"Authorization": f"Bearer {test_token}"}
-#         cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        inp_json = {
+            "name": "Посмотреть"
+        }
 
-#         db.cursor.return_value = cursor
+        test_cl = app.test_client()
+        with test_cl.post("/api/v1/customers",
+                          json=inp_json,
+                          headers=header) as req:
+            assert req.status_code == 201
 
-#         app = init(db)
+    def test_with_wrong_fields(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-#         inp_json = {
-#             "username": "Посмотреть"
-#         }
+        header = {"Authorization": f"Bearer {test_token}"}
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
 
-#         test_cl = app.test_client()
-#         with test_cl.post("/api/v1/customers", json=inp_json, headers=header) as req:
-#             assert req.status_code == 400
+        user_db.cursor.return_value = user_cursor
 
-#     def test_put_customer(self):
-#         test_token = str(uuid4())
-#         valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-#         db = MagicMock()
-#         cursor = MagicMock()
-#         header = {"Authorization": f"Bearer {test_token}"}
-#         cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        app = init(db, user_db)
 
-#         db.cursor.return_value = cursor
+        inp_json = {
+            "username": "Посмотреть"
+        }
 
-#         app = init(db)
+        test_cl = app.test_client()
+        with test_cl.post("/api/v1/customers",
+                          json=inp_json,
+                          headers=header) as req:
+            assert req.status_code == 400
 
-#         inp_json = {
-#             "name": "Посмотреть"
-#         }
+    def test_put_customer(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-#         test_cl = app.test_client()
-#         with test_cl.put("/api/v1/customers/1", json=inp_json, headers=header) as req:
-#             assert req.status_code == 204
+        header = {"Authorization": f"Bearer {test_token}"}
 
-#     def test_delete_customer(self):
-#         test_token = str(uuid4())
-#         valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-#         db = MagicMock()
-#         cursor = MagicMock()
-#         header = {"Authorization": f"Bearer {test_token}"}
-#         cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
 
-#         db.cursor.return_value = cursor
+        user_db.cursor.return_value = user_cursor
 
-#         app = init(db)
+        app = init(db, user_db)
 
-#         inp_json = {
-#             "name": "Посмотреть"
-#         }
+        inp_json = {
+            "name": "Посмотреть"
+        }
 
-#         test_cl = app.test_client()
-#         with test_cl.put("/api/v1/customers/1", json=inp_json, headers=header) as req:
-#             assert req.status_code == 204
+        test_cl = app.test_client()
+        with test_cl.put("/api/v1/customers/1",
+                         json=inp_json,
+                         headers=header) as req:
+            assert req.status_code == 204
+
+    def test_delete_customer(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
+
+        header = {"Authorization": f"Bearer {test_token}"}
+
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
+
+        user_db.cursor.return_value = user_cursor
+
+        app = init(db, user_db)
+
+        inp_json = {
+            "name": "Посмотреть"
+        }
+
+        test_cl = app.test_client()
+        with test_cl.put("/api/v1/customers/1", json=inp_json, headers=header) as req:
+            assert req.status_code == 204
 
 
 # class Test_Worker_Handler:
