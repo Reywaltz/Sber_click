@@ -1,5 +1,5 @@
 import uuid
-from cmd.additions import additions
+from additions.addition import check_password
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional
@@ -28,8 +28,8 @@ class UserRepo(Storage):
         if row is not None:
             tmp = User(*row)
 
-            valid_pass = additions.check_password(user.password,
-                                                  tmp.password,)
+            valid_pass = check_password(user.password,
+                                        tmp.password,)
             if valid_pass:
                 return True
         return False

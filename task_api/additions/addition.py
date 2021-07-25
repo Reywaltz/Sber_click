@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 
 import bcrypt
 from flask import request
-from internal.exceptions.exception import URLvalidException
+from internal.exception import URLvalidException
 from pydantic import BaseModel
 from werkzeug.datastructures import MultiDict
 

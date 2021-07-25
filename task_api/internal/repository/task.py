@@ -1,4 +1,4 @@
-from cmd.additions.additions import Queries
+from additions.addition import Queries
 from dataclasses import dataclass
 
 from internal.models.task import CreateTask, Storage, TaskFull

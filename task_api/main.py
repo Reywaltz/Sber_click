@@ -1,10 +1,10 @@
 import os
 
 import psycopg2
-from cmd.sber_api.customer import CustomerHandler
-from cmd.sber_api.task import TaskHandler
-from cmd.sber_api.user import UserHandler
-from cmd.sber_api.worker import WorkerHandler
+from customer import CustomerHandler
+from task import TaskHandler
+from user import UserHandler
+from worker import WorkerHandler
 
 from flask import Flask
 

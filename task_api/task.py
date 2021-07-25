@@ -1,8 +1,8 @@
-from cmd.additions.additions import auth_required, get_url_params
+from additions.addition import auth_required, get_url_params
 from dataclasses import dataclass
 
 from flask import Flask, Response, jsonify, request
-from internal.exceptions.exception import URLvalidException
+from internal.exception import URLvalidException
 from internal.models.task import CreateTask, TaskFull
 from internal.repository.task import TaskRepo
 from internal.repository.user import UserRepo
