@@ -1,28 +1,20 @@
 import random
-import uuid
+from datetime import datetime, timedelta
+from unittest.mock import MagicMock
+from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 import psycopg2
 import pytest
-
-from unittest.mock import MagicMock
-from internal.repository import customer, user, task, worker
-
 from flask import Flask
 
-from additions.addition import hash_password
-
-from uuid import uuid4
-from pkg.log import init_logger
-
-import bcrypt
 from customer import CustomerHandler
+from internal.repository import customer, task, user, worker
+from pkg.db import Config, newDB, parse_from_connstr
+from pkg.log import init_logger
+from task import TaskHandler
 from user import UserHandler
 from worker import WorkerHandler
-from task import TaskHandler
-
-from datetime import datetime, timedelta
-from pkg.db import Config, newDB, parse_from_connstr
 
 
 class Test_ParseConnStr:
@@ -131,13 +123,19 @@ class Test_User_Handler:
         test_hash = '$2b$12$TVug7gxMJubntOvSZ.pbduu3PDHaQBx/dk3PjtzviOB50fB1G4Yp2'
         db = MagicMock()
         cursor = MagicMock()
-        cursor.fetchone.return_value = ("admin", test_hash, datetime.now(), str(uuid4()))
+        cursor.fetchone.return_value = ("admin",
+                                        test_hash,
+                                        datetime.now(),
+                                        str(uuid4()))
+
         db.cursor.return_value = cursor
 
         app = init(db)
 
+        inp_json = {"username": "admin", "password": "test"}
+
         test_cl = app.test_client()
-        with test_cl.post("/api/v1/login", json={"username": "admin", "password": "test"}) as req:
+        with test_cl.post("/api/v1/login", json=inp_json) as req:
             assert req.status_code == 201
 
     def test_not_exsist_login(self):
@@ -149,8 +147,10 @@ class Test_User_Handler:
 
         app = init(db)
 
+        inp_json = {"username": "admin", "password": "test"}
+
         test_cl = app.test_client()
-        with test_cl.post("/api/v1/login", json={"username": "admin", "password": "test"}) as req:
+        with test_cl.post("/api/v1/login", json=inp_json) as req:
             assert req.status_code == 400
 
     def test_bad_json(self):
@@ -162,8 +162,10 @@ class Test_User_Handler:
 
         app = init(db)
 
+        inp_json = {"key1": "admin", "key2": "test"}
+
         test_cl = app.test_client()
-        with test_cl.post("/api/v1/login", json={"key1": "admin", "key2": "test"}) as req:
+        with test_cl.post("/api/v1/login", json=inp_json) as req:
             assert req.status_code == 400
 
 
