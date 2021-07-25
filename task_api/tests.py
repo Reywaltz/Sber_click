@@ -495,87 +495,129 @@ class Test_Customer_Handler:
         }
 
         test_cl = app.test_client()
-        with test_cl.put("/api/v1/customers/1", json=inp_json, headers=header) as req:
+        with test_cl.put("/api/v1/customers/1",
+                         json=inp_json,
+                         headers=header) as req:
             assert req.status_code == 204
 
 
-# class Test_Worker_Handler:
-    # def test_ok_add(self):
-    #     test_token = str(uuid4())
-    #     valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-    #     db = MagicMock()
-    #     cursor = MagicMock()
-    #     header = {"Authorization": f"Bearer {test_token}"}
-    #     cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+class Test_Worker_Handler:
+    def test_ok_add(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-    #     db.cursor.return_value = cursor
+        header = {"Authorization": f"Bearer {test_token}"}
 
-    #     app = init(db)
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
 
-    #     inp_json = {
-    #         "name": "ФИО"
-    #     }
+        user_db.cursor.return_value = user_cursor
 
-    #     test_cl = app.test_client()
-    #     with test_cl.post("/api/v1/workers", json=inp_json, headers=header) as req:
-    #         assert req.status_code == 201
+        app = init(db, user_db)
 
-    # def test_with_wrong_fields(self):
-    #     test_token = str(uuid4())
-    #     valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-    #     db = MagicMock()
-    #     cursor = MagicMock()
-    #     header = {"Authorization": f"Bearer {test_token}"}
-    #     cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        inp_json = {
+            "name": "ФИО"
+        }
 
-    #     db.cursor.return_value = cursor
+        test_cl = app.test_client()
+        with test_cl.post("/api/v1/workers",
+                          json=inp_json,
+                          headers=header) as req:
+            assert req.status_code == 201
 
-    #     app = init(db)
+    def test_with_wrong_fields(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-    #     inp_json = {
-    #         "SOMEWRONGFIELD": "ФИО"
-    #     }
+        header = {"Authorization": f"Bearer {test_token}"}
 
-    #     test_cl = app.test_client()
-    #     with test_cl.post("/api/v1/workers", json=inp_json, headers=header) as req:
-    #         assert req.status_code == 400
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
 
-    # def test_put_worker(self):
-    #     test_token = str(uuid4())
-    #     valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-    #     db = MagicMock()
-    #     cursor = MagicMock()
-    #     header = {"Authorization": f"Bearer {test_token}"}
-    #     cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        user_db.cursor.return_value = user_cursor
 
-    #     db.cursor.return_value = cursor
+        app = init(db, user_db)
 
-    #     app = init(db)
+        inp_json = {
+            "SOMEWRONGFIELD": "ФИО"
+        }
 
-    #     inp_json = {
-    #         "name": "ФИО"
-    #     }
+        test_cl = app.test_client()
+        with test_cl.post("/api/v1/workers",
+                          json=inp_json,
+                          headers=header) as req:
+            assert req.status_code == 400
 
-    #     test_cl = app.test_client()
-    #     with test_cl.put("/api/v1/workers/1", json=inp_json, headers=header) as req:
-    #         assert req.status_code == 204
+    def test_put_worker(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
 
-    # def test_delete_worker(self):
-    #     test_token = str(uuid4())
-    #     valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
-    #     db = MagicMock()
-    #     cursor = MagicMock()
-    #     header = {"Authorization": f"Bearer {test_token}"}
-    #     cursor.fetchone.return_value = ("admin", "pass", test_token, valid_to)
+        header = {"Authorization": f"Bearer {test_token}"}
 
-    #     db.cursor.return_value = cursor
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
 
-    #     app = init(db)
+        user_db.cursor.return_value = user_cursor
 
-    #     inp_json = {
-    #         "name": "ФИО"
-    #     }
+        app = init(db, user_db)
 
-    #     test_cl = app.test_client()
-    #     with test_cl.put("/api/v1/workers/1", json=inp_json, headers=header) as req:
-    #         assert req.status_code == 204
+        inp_json = {
+            "name": "ФИО"
+        }
+
+        test_cl = app.test_client()
+        with test_cl.put("/api/v1/workers/1",
+                         json=inp_json,
+                         headers=header) as req:
+            assert req.status_code == 204
+
+    def test_delete_worker(self):
+        test_token = str(uuid4())
+        valid_to = datetime.now(tz=ZoneInfo("UTC")) + timedelta(hours=1)
+        db = MagicMock()
+        user_db = MagicMock()
+        user_cursor = MagicMock()
+
+        header = {"Authorization": f"Bearer {test_token}"}
+
+        user_cursor.fetchone.return_value = (
+            "admin",
+            "pass",
+            test_token,
+            valid_to
+        )
+
+        user_db.cursor.return_value = user_cursor
+
+        app = init(db, user_db)
+
+        inp_json = {
+            "name": "ФИО"
+        }
+
+        test_cl = app.test_client()
+        with test_cl.put("/api/v1/workers/1",
+                         json=inp_json,
+                         headers=header) as req:
+            assert req.status_code == 204

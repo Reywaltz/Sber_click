@@ -20,7 +20,7 @@ app = Flask("task-api")
 logger = init_logger("sber-log")
 
 try:
-    conn_params = parse_from_connstr("postgres://sber:sber@localhost:5433/sber")
+    conn_params = parse_from_connstr("postgres://sber:sber@db:5432/sber")
 except TypeError as e:
     logger.error(f"Can't parse conn string: {e}")
 
@@ -53,4 +53,4 @@ logger.info("Server is UP")
 if __name__ == "__main__":
     port = os.getenv("PORT", 5000)
     debug = os.getenv("MODE", False)
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=debug)
