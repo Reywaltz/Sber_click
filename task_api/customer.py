@@ -41,10 +41,13 @@ class CustomerHandler:
     def create_customer(self):
         data = request.get_json(force=True)
 
-        username = data.get("username", "")
+        name = data.get("name", "")
         tg_name = data.get("tg_name", None)
 
-        if (username == "") and (tg_name is not None) and (tg_name != ""):
+        if (name == ""):
+            return {"error": "empty fields"}, 400
+
+        if (tg_name is not None) and (tg_name != ""):
             return {"error": "empty fields"}, 400
 
         try:

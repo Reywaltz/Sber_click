@@ -19,7 +19,7 @@ class CustomerRepo(Storage):
     def insert(self, customer: Customer):
         cursor = self.db.cursor()
         try:
-            cursor.execute(insert_customer, (customer.username,
+            cursor.execute(insert_customer, (customer.name,
                                              customer.tg_id,
                                              customer.tg_name,
                                              customer.tg_chat))

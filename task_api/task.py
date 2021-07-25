@@ -112,7 +112,7 @@ class TaskHandler:
 
         return {"success": "deleted"}, 204
 
-    @auth_required
+    # @auth_required
     def get_tasks(self):
         args = request.args
 

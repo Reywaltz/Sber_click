@@ -72,6 +72,7 @@ class TaskRepo(Storage):
                                    queries.created[-1],
                                    queries.type,))
 
+
         res = scan_tasks(cursor.fetchall())
 
         return res
