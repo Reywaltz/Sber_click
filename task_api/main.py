@@ -52,5 +52,4 @@ logger.info("Server is UP")
 
 if __name__ == "__main__":
     port = os.getenv("PORT", 5000)
-    debug = os.getenv("MODE", False)
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    app.run(host="0.0.0.0", port=port, debug=True)
