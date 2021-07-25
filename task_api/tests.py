@@ -167,7 +167,6 @@ class Test_Task_Handler:
         ]]
 
         db = MagicMock()
-        cursor = MagicMock()
 
         user_db = MagicMock()
         user_cursor = MagicMock()
@@ -179,9 +178,9 @@ class Test_Task_Handler:
             valid_to
         )
 
-        cursor.fetchall.return_value = return_val
+        user_cursor.fetchall.return_value = return_val
 
-        user_db.cursor.return_value = cursor
+        user_db.cursor.return_value = user_cursor
 
         header = {"Authorization": f"Bearer {test_token}"}
 
